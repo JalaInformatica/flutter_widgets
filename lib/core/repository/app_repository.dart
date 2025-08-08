@@ -1,19 +1,16 @@
 import 'dart:convert';
 import 'package:flutter_widgets/core/models/response/response_model.dart';
 
-class AppRepository<T> {
-  ResponseModel<List<T>> getResponseListData(String response, {required List<T> Function(String) formatter}) {
+class AppRepository {
+  ResponseModel<List<T>> getResponseListData<T>(String response, {required List<T> Function(List<dynamic>) formatter}) {
     var result = jsonDecode(response)["rs"] ?? {};
 
     try {
       if (result['RESULT_CODE'].toString().contains("01")) {
         List<T> data;
 
-        if (result['DATA'] != null) {
-          data = formatter(result['DATA']);
-        } else {
-          data = []; 
-        }
+        List<String> rawData = result['DATA'] ?? [];
+        data = formatter(rawData);
 
         return ResponseModel(
           data: data,
@@ -40,7 +37,7 @@ class AppRepository<T> {
   }
 
 
-  List<ResponseModel<T>> getResponseListSingleData(String response, {required T Function(String) formatter}) {
+  List<ResponseModel<T>> getResponseListSingleData<T>(String response, {required T Function(dynamic) formatter}) {
     var result = jsonDecode(response)["rs"] ?? {};
     try {
       List rawdata = [];
@@ -73,7 +70,7 @@ class AppRepository<T> {
     }
   }
 
-  ResponseModel<T> getResponseSingleData(String response, {required T Function(String) formatter}) {
+  ResponseModel<T> getResponseSingleData<T>(String response, {required T Function(dynamic) formatter}) {
     var result = jsonDecode(response)["rs"] ?? {};
     try {
       List rawdata = [];
