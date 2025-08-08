@@ -20,6 +20,7 @@ export 'src/app_table3.dart';
 export 'src/app_text_field.dart';
 export 'src/app_text_form_field.dart';
 export 'src/app_tile.dart';
+export 'src/app_dropdown.dart';
 
 // Export theming helpers
 export 'theme/app_color.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_widgets/theme/app_color.dart';
-import 'package:flutter_widgets/theme/app_text_style.dart';
+import 'package:xhalona_pos/core/helper/global_helper.dart';
+import 'package:xhalona_pos/core/theme/theme.dart';
 
 class AppTextField extends TextField{
   AppTextField({
@@ -14,61 +14,89 @@ class AppTextField extends TextField{
     TextInputAction? inputAction = TextInputAction.done,
     TextEditingController? textEditingController,
     EdgeInsets? contentPadding,
-    Color? normalBorder,
-    Color? focusedBorder,
-    Color? errorBorder,
-    BorderRadius? borderRadius,
-    super.onChanged,
-    super.onSubmitted,
+    bool isThousand = false,
+    Function(String)? onChanged,
     super.autofocus,
-    super.readOnly,
-    super.keyboardType,
+    super.onTap,
+    super.focusNode,
+    bool readOnly = false,
+    super.textAlign,
     super.maxLines,
-    super.inputFormatters
+    super.onSubmitted,
+    bool disabled = false,
+    bool unfocusWhenTapOutside = true,
+    Function(PointerDownEvent)? onTapOutside,
   }) : super(
-      onTapOutside: (_) {
+      onTapOutside: unfocusWhenTapOutside? (e) {
+        onTapOutside?.call(e);
         FocusScope.of(context).unfocus();
+      } : null,
+      readOnly: disabled || readOnly,
+      onChanged: (val){
+        if (isThousand && textEditingController!=null) {
+          // Store the original cursor position
+          int cursorPosition = textEditingController.selection.baseOffset;
+
+          // Remove any existing separators before formatting
+          String cleanValue = val.replaceAll(".", "").replaceAll(",", "").replaceAll(RegExp(r'\D'), '');
+          
+          // Format the number
+          String formattedText = formatThousands(cleanValue);
+
+          // Calculate new cursor position after formatting
+          int newCursorPosition = formattedText.length - (cleanValue.length - cursorPosition);
+
+          // Ensure the cursor stays within valid bounds
+          newCursorPosition = newCursorPosition.clamp(0, formattedText.length);
+
+          // Update the text field with formatted value and adjusted cursor position
+          textEditingController.value = TextEditingValue(
+            text: formattedText,
+            selection: TextSelection.collapsed(offset: newCursorPosition),
+          );
+        }
+        onChanged?.call(val);
       },
       controller: textEditingController,
-      style: style ?? AppTextStyle.textNStyle(),
+      style: style ?? AppTextStyle.textBodyStyle(),
       cursorColor: AppColor.primaryColor,
       textInputAction: inputAction,
       decoration: InputDecoration(
+        filled: disabled || fillColor!=null,
+        fillColor: disabled ? AppColor.grey300 : fillColor,
         labelText: labelText,
-        labelStyle: AppTextStyle.textNStyle(
+        labelStyle: AppTextStyle.textBodyStyle(
           color: AppColor.grey500,
         ),
-        floatingLabelStyle: AppTextStyle.textNStyle(
+        floatingLabelStyle: AppTextStyle.textBodyStyle(
           color: AppColor.primaryColor
         ),
         isDense: true,
         hintText: hintText,
         contentPadding: contentPadding,
         hintStyle: (
-          style ?? AppTextStyle.textNStyle()).copyWith(
+          style ?? AppTextStyle.textBodyStyle()).copyWith(
           color: AppColor.grey500,
         ),
-        filled: fillColor!=null,
-        fillColor: fillColor,
         prefixIcon: prefixIcon,
         prefixIconColor: AppColor.grey500,
         suffixIcon: suffixIcon,
         suffixIconColor: AppColor.grey500,
         border: OutlineInputBorder(
-          borderRadius: borderRadius ?? BorderRadius.circular(5),
-          borderSide:  BorderSide(color: normalBorder?? AppColor.grey100),
+          borderRadius: BorderRadius.circular(5),
+          borderSide: BorderSide(color: AppColor.grey100),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: borderRadius ?? BorderRadius.circular(5),
-          borderSide: BorderSide(color: normalBorder??AppColor.grey300),
+          borderRadius: BorderRadius.circular(5),
+          borderSide: BorderSide(color: AppColor.grey300),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: borderRadius ?? BorderRadius.circular(5),
-          borderSide: BorderSide(color: focusedBorder??AppColor.primaryColor),
+          borderRadius: BorderRadius.circular(5),
+          borderSide: BorderSide(color: AppColor.primaryColor),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: borderRadius ?? BorderRadius.circular(5),
-          borderSide: BorderSide(color: errorBorder?? AppColor.dangerColor),
+          borderRadius: BorderRadius.circular(5),
+          borderSide: BorderSide(color: AppColor.dangerColor),
         ),
       ));
 }
