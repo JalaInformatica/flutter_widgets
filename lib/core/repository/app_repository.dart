@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'package:flutter_widgets/core/models/response/response_model.dart';
+import 'package:flutter_widgets/core/models/response/response_code.dart';
 
 class AppRepository {
   ResponseModel<List<T>> getResponseListData<T>(String response, {required List<T> Function(List<dynamic>) formatter}) {
     var result = jsonDecode(response)["rs"] ?? {};
 
     try {
-      if (result['RESULT_CODE'].toString().contains("01")) {
+      if (result['RESULT_CODE'].toString().contains(ResponseCode.success)) {
         List<T> data;
 
         List<String> rawData = result['DATA'] ?? [];
@@ -14,14 +15,14 @@ class AppRepository {
 
         return ResponseModel(
           data: data,
-          resultCode: result['RESULT_CODE'] ?? '',
+          resultCode: result['RESULT_CODE'] ?? ResponseCode.success,
           resultDesc: result['RESULT_DESC'] ?? '',
           resultMessage: result['MESSAGE'] ?? '',
         );
       } else {
         return ResponseModel(
           data: [],
-          resultCode: result['RESULT_CODE'] ?? '00',
+          resultCode: result['RESULT_CODE'] ?? ResponseCode.error,
           resultDesc: result['RESULT_DESC'] ?? 'GAGAL',
           resultMessage: result['MESSAGE'] ?? '',
         );
@@ -29,15 +30,47 @@ class AppRepository {
     } catch (e) {
       return ResponseModel(
         data: [],
-        resultCode: result['RESULT_CODE'] ?? '00',
+        resultCode: result['RESULT_CODE'] ?? ResponseCode.error,
         resultDesc: result['RESULT_DESC'] ?? 'GAGAL',
         resultMessage: e.toString(),
       );
     }
   }
 
+  ResponseModel<T> getResponseSingleData<T>(String response, {required T Function(dynamic) formatter}) {
+    var result = jsonDecode(response)["rs"] ?? {};
 
-  List<ResponseModel<T>> getResponseListSingleData<T>(String response, {required T Function(dynamic) formatter}) {
+    try {
+      if (result['RESULT_CODE'].toString().contains(ResponseCode.success)) {
+        final rawData = result['DATA'] ?? [];
+
+        T data = formatter(rawData.first);
+
+        return ResponseModel(
+          data: data,
+          resultCode: result['RESULT_CODE'] ?? ResponseCode.success,
+          resultDesc: result['RESULT_DESC'] ?? '',
+          resultMessage: result['MESSAGE'] ?? '',
+        );
+      } else {
+        return ResponseModel(
+          data: null,
+          resultCode: result['RESULT_CODE'] ?? ResponseCode.error,
+          resultDesc: result['RESULT_DESC'] ?? 'GAGAL',
+          resultMessage: result['MESSAGE'] ?? '',
+        );
+      }
+    } catch (e) {
+      return ResponseModel(
+        data: null,
+        resultCode: result['RESULT_CODE'] ?? ResponseCode.error,
+        resultDesc: result['RESULT_DESC'] ?? 'GAGAL',
+        resultMessage: e.toString(),
+      );
+    }
+  }
+
+  List<ResponseModel<T>> getResponseWriteListData<T>(String response, {required T Function(dynamic) formatter}) {
     var result = jsonDecode(response)["rs"] ?? {};
     try {
       List rawdata = [];
@@ -51,7 +84,7 @@ class AppRepository {
         sendData.add(
           ResponseModel(
             data: formatter(item), 
-            resultCode: item['RESULT_CODE'] ?? "", 
+            resultCode: item['RESULT_CODE'] ?? ResponseCode.success, 
             resultDesc: item['RESULT_DESC'] ?? "", 
             resultMessage: item['MESSAGE'] ?? ""
           )
@@ -62,7 +95,7 @@ class AppRepository {
       return [
         ResponseModel(
           data: null, 
-          resultCode: result['RESULT_CODE'] ?? '00', 
+          resultCode: result['RESULT_CODE'] ?? ResponseCode.error, 
           resultDesc: result['RESULT_DESC'] ?? 'GAGAL', 
           resultMessage: result['MESSAGE'] ?? e
         )
@@ -70,7 +103,7 @@ class AppRepository {
     }
   }
 
-  ResponseModel<T> getResponseSingleData<T>(String response, {required T Function(dynamic) formatter}) {
+  ResponseModel<T> getResponseWriteSingleData<T>(String response, {required T Function(dynamic) formatter}) {
     var result = jsonDecode(response)["rs"] ?? {};
     try {
       List rawdata = [];
@@ -82,14 +115,14 @@ class AppRepository {
       var item = rawdata.first;
       return ResponseModel(
         data: formatter(item), 
-        resultCode: item['RESULT_CODE'] ?? "", 
+        resultCode: item['RESULT_CODE'] ?? ResponseCode.success, 
         resultDesc: item['RESULT_DESC'] ?? "", 
         resultMessage: item['MESSAGE'] ?? ""
       );
     } catch (e) {
       return ResponseModel(
         data: null, 
-        resultCode: result['RESULT_CODE'] ?? '00', 
+        resultCode: result['RESULT_CODE'] ?? ResponseCode.error, 
         resultDesc: result['RESULT_DESC'] ?? 'GAGAL', 
         resultMessage: result['MESSAGE'] ?? e
       );
