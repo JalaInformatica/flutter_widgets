@@ -16,7 +16,7 @@ class ViewModelHandler {
   }
 
 
-  Future<T> appTryAsync<T>({
+  static Future<T> appTryAsync<T>({
     required Future<T> Function() execute,
     Function()? onError
     }) async {
