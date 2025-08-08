@@ -2,36 +2,45 @@ import 'dart:convert';
 import 'package:flutter_widgets/core/models/response/response_model.dart';
 
 class AppRepository<T> {
-  ResponseModel<List<T>> getResponseListData(String response) {
+  ResponseModel<List<T>> getResponseListData(String response, {required List<T> Function(String) formatter}) {
     var result = jsonDecode(response)["rs"] ?? {};
-    try{
-      if (result['RESULT_CODE'].toString().contains("01")) {  
-        List<T> data = result['DATA'] ?? [];
+
+    try {
+      if (result['RESULT_CODE'].toString().contains("01")) {
+        List<T> data;
+
+        if (result['DATA'] != null) {
+          data = formatter(result['DATA']);
+        } else {
+          data = []; 
+        }
+
         return ResponseModel(
-          data: data, 
-          resultCode: result['RESULT_CODE'] ?? '', 
-          resultDesc: result['RESULT_DESC'] ?? '', 
-          resultMessage: result['MESSAGE'] ?? ''
-        );    
+          data: data,
+          resultCode: result['RESULT_CODE'] ?? '',
+          resultDesc: result['RESULT_DESC'] ?? '',
+          resultMessage: result['MESSAGE'] ?? '',
+        );
       } else {
         return ResponseModel(
-          data: [], 
-          resultCode: result['RESULT_CODE'] ?? '00', 
-          resultDesc: result['RESULT_DESC'] ?? 'GAGAL', 
-          resultMessage: result['MESSAGE'] ?? ''
-        ); 
+          data: [],
+          resultCode: result['RESULT_CODE'] ?? '00',
+          resultDesc: result['RESULT_DESC'] ?? 'GAGAL',
+          resultMessage: result['MESSAGE'] ?? '',
+        );
       }
-    } catch(e){
+    } catch (e) {
       return ResponseModel(
-        data: [], 
-        resultCode: result['RESULT_CODE'] ?? '00', 
-        resultDesc: result['RESULT_DESC'] ?? 'GAGAL', 
-        resultMessage: result['MESSAGE'] ?? e
+        data: [],
+        resultCode: result['RESULT_CODE'] ?? '00',
+        resultDesc: result['RESULT_DESC'] ?? 'GAGAL',
+        resultMessage: e.toString(),
       );
     }
   }
 
-  List<ResponseModel<T>> getResponseListSingleData(String response) {
+
+  List<ResponseModel<T>> getResponseListSingleData(String response, {required T Function(String) formatter}) {
     var result = jsonDecode(response)["rs"] ?? {};
     try {
       List rawdata = [];
@@ -44,7 +53,7 @@ class AppRepository<T> {
       for (var item in rawdata) {
         sendData.add(
           ResponseModel(
-            data: item, 
+            data: formatter(item), 
             resultCode: item['RESULT_CODE'] ?? "", 
             resultDesc: item['RESULT_DESC'] ?? "", 
             resultMessage: item['MESSAGE'] ?? ""
@@ -64,7 +73,7 @@ class AppRepository<T> {
     }
   }
 
-  ResponseModel<T> getResponseSingleData(String response) {
+  ResponseModel<T> getResponseSingleData(String response, {required T Function(String) formatter}) {
     var result = jsonDecode(response)["rs"] ?? {};
     try {
       List rawdata = [];
@@ -75,7 +84,7 @@ class AppRepository<T> {
       }
       var item = rawdata.first;
       return ResponseModel(
-        data: item, 
+        data: formatter(item), 
         resultCode: item['RESULT_CODE'] ?? "", 
         resultDesc: item['RESULT_DESC'] ?? "", 
         resultMessage: item['MESSAGE'] ?? ""
