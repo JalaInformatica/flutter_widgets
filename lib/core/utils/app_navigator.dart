@@ -5,15 +5,15 @@ class AppNavigator {
     return Navigator.of(context).push(MaterialPageRoute(builder: (context)=>destination));
   }
 
-  static void navigatePushReplace(BuildContext context, Widget destination){
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>destination));
+  static Future<dynamic> navigatePushReplace(BuildContext context, Widget destination){
+    return Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>destination));
   }
 
   static void navigateBack(BuildContext context){
     Navigator.of(context).pop();
   }
 
-  static void navigatePushRemove(BuildContext context, Widget destination){
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>destination), (route)=>false);
+  static Future<dynamic> navigatePushRemove(BuildContext context, Widget destination){
+    return Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>destination), (route)=>false);
   }
 }

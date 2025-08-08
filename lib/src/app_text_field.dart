@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:xhalona_pos/core/helper/global_helper.dart';
-import 'package:xhalona_pos/core/theme/theme.dart';
+
+import '../core/theme/theme.dart';
+import '../core/utils/format.dart';
 
 class AppTextField extends TextField{
   AppTextField({
@@ -58,24 +59,24 @@ class AppTextField extends TextField{
         onChanged?.call(val);
       },
       controller: textEditingController,
-      style: style ?? AppTextStyle.textBodyStyle(),
+      style: style ?? AppTextStyle.textNStyle(),
       cursorColor: AppColor.primaryColor,
       textInputAction: inputAction,
       decoration: InputDecoration(
         filled: disabled || fillColor!=null,
         fillColor: disabled ? AppColor.grey300 : fillColor,
         labelText: labelText,
-        labelStyle: AppTextStyle.textBodyStyle(
+        labelStyle: AppTextStyle.textNStyle(
           color: AppColor.grey500,
         ),
-        floatingLabelStyle: AppTextStyle.textBodyStyle(
+        floatingLabelStyle: AppTextStyle.textNStyle(
           color: AppColor.primaryColor
         ),
         isDense: true,
         hintText: hintText,
         contentPadding: contentPadding,
         hintStyle: (
-          style ?? AppTextStyle.textBodyStyle()).copyWith(
+          style ?? AppTextStyle.textNStyle()).copyWith(
           color: AppColor.grey500,
         ),
         prefixIcon: prefixIcon,

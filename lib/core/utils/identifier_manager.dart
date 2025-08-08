@@ -1,16 +1,15 @@
-import 'package:migor_commerce/core/constants/local_storage.dart';
-import 'package:migor_commerce/core/utils/hive_manager.dart';
-import 'package:migor_commerce/features/authentication/sign_in/models/login_model.dart';
+import '../constants/local_storage.dart';
+import 'hive_manager.dart';
 
 class IdentifierManager {
  static bool isAuthenticated(){
   return HiveManager.getStringData(LocalStorageConst.userId).isNotEmpty;
  }
 
- static Future<void> saveAuthenticationInfo(LoginModel loginInfo) async {
+ static Future<void> saveAuthenticationInfo({required String userId, required String sessionLoginId}) async {
   
-  await HiveManager.saveData(LocalStorageConst.userId, loginInfo.userId);
-  await HiveManager.saveData(LocalStorageConst.sessionLoginId, loginInfo.sessionLoginInfo.first.sessionLoginId);      
+  await HiveManager.saveData(LocalStorageConst.userId, userId);
+  await HiveManager.saveData(LocalStorageConst.sessionLoginId, sessionLoginId);      
  }
 
  static Future<void> removeAuthenticationInfo() async {

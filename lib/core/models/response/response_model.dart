@@ -1,5 +1,5 @@
 class ResponseModel<T> {
-    final T data;
+    final T? data;
     final String resultCode;
     final String resultDesc;
     final String resultMessage;

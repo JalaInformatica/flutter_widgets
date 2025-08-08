@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../core/theme/theme.dart';
+import '../core/utils/format.dart';
+
 class AppTextField2 extends Column{
   AppTextField2({
     required BuildContext context,
@@ -61,24 +64,24 @@ class AppTextField2 extends Column{
           onChanged?.call(val);
         },
         controller: textEditingController,
-        style: style ?? AppTextStyle.textBodyStyle(),
+        style: style ?? AppTextStyle.textNStyle(),
         cursorColor: AppColor.primaryColor,
         textInputAction: inputAction,
         decoration: InputDecoration(
           filled: disabled || fillColor!=null,
           fillColor: disabled ? AppColor.grey100 : fillColor,
           labelText: labelText,
-          labelStyle: AppTextStyle.textBodyStyle(
+          labelStyle: AppTextStyle.textNStyle(
             color: AppColor.grey500,
           ),
-          floatingLabelStyle: AppTextStyle.textBodyStyle(
+          floatingLabelStyle: AppTextStyle.textNStyle(
             color: !disabled? AppColor.primaryColor : AppColor.grey500
           ),
           isDense: true,
           hintText: hintText,
           contentPadding: contentPadding,
           hintStyle: (
-            style ?? AppTextStyle.textBodyStyle()).copyWith(
+            style ?? AppTextStyle.textNStyle()).copyWith(
             color: AppColor.grey500,
           ),
           prefixIcon: prefixIcon,
@@ -104,7 +107,7 @@ class AppTextField2 extends Column{
         )
       ),
       if(errorText!=null)
-      Text(errorText, style: AppTextStyle.textBodyStyle(color: AppColor.dangerColor),)
+      Text(errorText, style: AppTextStyle.textNStyle(color: AppColor.dangerColor),)
     ],
   );
 }
