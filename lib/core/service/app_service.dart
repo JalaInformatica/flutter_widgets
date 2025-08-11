@@ -28,16 +28,18 @@ class AppServices {
   }
 
   Future<http.Response> post(String url, { required Object body }) async {
-    var baseUrl = await getBaseUrl();
-    Map<String, String>? headers = await requestHeaders();
     try {
+      var baseUrl = await getBaseUrl();
+      Map<String, String>? headers = await requestHeaders();  
       logger.i("url: $url body: $body");
       var response = await http.Client().post(Uri.parse(baseUrl + url), headers: headers, body: body);
       logger.i(response.body);
       return response;
     } on SocketException {
       throw Exception("Masalah Jaringan");
-    }
+    } catch(e) {
+      rethrow;
+    } 
   }
 
   Future<http.Response> postFormData(String url,
@@ -130,10 +132,13 @@ class AppServices {
   Future<http.Response> getServerInfoRq(String url) async {
     try {
       var response = await http.Client().get(Uri.parse(url));
+      logger.i(url);
       logger.i(response.body);
       return response;
     } on SocketException {
       throw Exception("Masalah Jaringan");
+    } catch (e){
+      rethrow;
     }
   }
 
@@ -158,6 +163,8 @@ class AppServices {
       return response;
     } on SocketException {
       throw Exception("Masalah Jaringan");
+    } catch (e){
+      rethrow;
     }
   }
 }

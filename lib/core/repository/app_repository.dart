@@ -16,22 +16,19 @@ class AppRepository {
         return ResponseModel(
           data: data,
           resultCode: result['RESULT_CODE'] ?? ResponseCode.success,
-          resultDesc: result['RESULT_DESC'] ?? '',
+          resultDesc: result['RESULT_DESC'] ?? ResponseCode.successMsg,
           resultMessage: result['MESSAGE'] ?? '',
         );
       } else {
         return ResponseModel(
           data: [],
           resultCode: result['RESULT_CODE'] ?? ResponseCode.error,
-          resultDesc: result['RESULT_DESC'] ?? 'GAGAL',
+          resultDesc: result['RESULT_DESC'] ?? ResponseCode.errorMsg,
           resultMessage: result['MESSAGE'] ?? '',
         );
       }
     } catch (e) {
-      return ResponseModel(
-        data: [],
-        resultCode: result['RESULT_CODE'] ?? ResponseCode.error,
-        resultDesc: result['RESULT_DESC'] ?? 'GAGAL',
+      return ResponseModel.exception(
         resultMessage: e.toString(),
       );
     }
@@ -49,22 +46,19 @@ class AppRepository {
         return ResponseModel(
           data: data,
           resultCode: result['RESULT_CODE'] ?? ResponseCode.success,
-          resultDesc: result['RESULT_DESC'] ?? '',
+          resultDesc: result['RESULT_DESC'] ?? ResponseCode.successMsg,
           resultMessage: result['MESSAGE'] ?? '',
         );
       } else {
         return ResponseModel(
           data: null,
           resultCode: result['RESULT_CODE'] ?? ResponseCode.error,
-          resultDesc: result['RESULT_DESC'] ?? 'GAGAL',
+          resultDesc: result['RESULT_DESC'] ?? ResponseCode.errorMsg,
           resultMessage: result['MESSAGE'] ?? '',
         );
       }
     } catch (e) {
-      return ResponseModel(
-        data: null,
-        resultCode: result['RESULT_CODE'] ?? ResponseCode.error,
-        resultDesc: result['RESULT_DESC'] ?? 'GAGAL',
+      return ResponseModel.exception(
         resultMessage: e.toString(),
       );
     }
@@ -81,24 +75,30 @@ class AppRepository {
       }
       List<ResponseModel<T>> sendData = [];
       for (var item in rawdata) {
-        sendData.add(
-          ResponseModel(
-            data: formatter(item), 
-            resultCode: item['RESULT_CODE'] ?? ResponseCode.success, 
-            resultDesc: item['RESULT_DESC'] ?? "", 
-            resultMessage: item['MESSAGE'] ?? ""
-          )
-        );
+        if(item['RESULT_CODE'].toString().contains(ResponseCode.success)){
+          sendData.add(
+            ResponseModel(
+              data: formatter(item), 
+              resultCode: item['RESULT_CODE'] ?? ResponseCode.success, 
+              resultDesc: item['RESULT_DESC'] ?? ResponseCode.successMsg, 
+              resultMessage: item['MESSAGE'] ?? ""
+            )
+          );
+        } else {
+          sendData.add(
+            ResponseModel(
+              data: null, 
+              resultCode: item['RESULT_CODE'] ?? ResponseCode.error, 
+              resultDesc: item['RESULT_DESC'] ?? ResponseCode.errorMsg, 
+              resultMessage: item['MESSAGE'] ?? ""
+            )
+          );
+        }
       }
       return sendData;
     } catch (e){
       return [
-        ResponseModel(
-          data: null, 
-          resultCode: result['RESULT_CODE'] ?? ResponseCode.error, 
-          resultDesc: result['RESULT_DESC'] ?? 'GAGAL', 
-          resultMessage: result['MESSAGE'] ?? e
-        )
+        ResponseModel.exception(resultMessage: e.toString())
       ];
     }
   }
@@ -113,19 +113,22 @@ class AppRepository {
         rawdata = result['DATA'];
       }
       var item = rawdata.first;
+      if(item['RESULT_CODE'].toString().contains(ResponseCode.success)){
+        return ResponseModel(
+          data: formatter(item), 
+          resultCode: item['RESULT_CODE'] ?? ResponseCode.success, 
+          resultDesc: item['RESULT_DESC'] ?? ResponseCode.successMsg, 
+          resultMessage: item['MESSAGE'] ?? ""
+        );
+      }
       return ResponseModel(
-        data: formatter(item), 
-        resultCode: item['RESULT_CODE'] ?? ResponseCode.success, 
-        resultDesc: item['RESULT_DESC'] ?? "", 
+        data: null, 
+        resultCode: item['RESULT_CODE'] ?? ResponseCode.error, 
+        resultDesc: item['RESULT_DESC'] ?? ResponseCode.errorMsg, 
         resultMessage: item['MESSAGE'] ?? ""
       );
     } catch (e) {
-      return ResponseModel(
-        data: null, 
-        resultCode: result['RESULT_CODE'] ?? ResponseCode.error, 
-        resultDesc: result['RESULT_DESC'] ?? 'GAGAL', 
-        resultMessage: result['MESSAGE'] ?? e
-      );
+      return ResponseModel.exception(resultMessage: e.toString());
     }
   }
 }

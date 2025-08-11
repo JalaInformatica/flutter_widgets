@@ -17,29 +17,45 @@ class ViewModelHandler {
 
 
   static Future<T> appTryAsync<T>({
-    required Future<T> Function() execute,
-    Function()? onError
-    }) async {
-    try {
-      return await execute();
-    } catch (e) {
-      if(onError!=null) onError();
-      showErrorToast(e.toString());
-      return Future.error(e);
-    } 
+  required Future<T> Function() execute,
+  T? defaultValue,
+  Function()? onError,
+}) async {
+  try {
+    return await execute();
+  } catch (e, st) {
+    if (onError != null) {
+      try {
+        onError();
+      } catch (_) {}
+    }
+    showErrorToast(e.toString());
+    return defaultValue as T;
   }
+}
 
-  static Future<T> showErrorToast(String e) async {
+
+
+
+  static Future<void> showErrorToast(String e) async {
     return await SmartDialog.showToast(e, displayTime: Duration(seconds: 2));
   }
 
-  static void handleResponseCode(ResponseModel data, {required Function() onSuccess, required Function() onError}){
+  static void handleResponseCode<T>(ResponseModel<T> data, {required Function(T) onSuccess, required Function(String) onError}){
     switch(data.resultCode){
       case ResponseCode.success:
-      onSuccess();
+        if(data.data!=null){
+          onSuccess(data.data!);
+        }
+        else {
+          onError(data.resultMessage); 
+        }
       break;
       case ResponseCode.error:
-      onError();
+      onError(data.resultMessage);
+      break;
+      case ResponseCode.exception:
+      throw Exception(data.resultMessage);
       break;
     }
   } 
