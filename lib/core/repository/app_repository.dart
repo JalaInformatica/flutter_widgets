@@ -10,7 +10,7 @@ class AppRepository {
       if (result['RESULT_CODE'].toString().contains(ResponseCode.success)) {
         List<T> data;
 
-        List<String> rawData = result['DATA'] ?? [];
+        List<dynamic> rawData = result['DATA'] ?? [];
         data = formatter(rawData);
         
         return ResponseModelPaginated(

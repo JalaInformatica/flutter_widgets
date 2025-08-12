@@ -1,6 +1,7 @@
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter_widgets/core/models/response/response_model.dart';
 import 'package:flutter_widgets/core/models/response/response_code.dart';
+import 'package:logger/logger.dart';
 
 class ViewModelHandler {
   static void appTry<T>({
@@ -39,6 +40,19 @@ class ViewModelHandler {
 
   static Future<void> showErrorToast(String e) async {
     return await SmartDialog.showToast(e, displayTime: Duration(seconds: 2));
+  }
+
+  static void tryCatch({
+    required Function() run,
+    required Function(Object, StackTrace) onError
+  }){
+    try {
+      run();
+    }
+    catch(e, st) {
+      onError(e, st);
+      Logger().e(e.toString());
+    }
   }
 
   static void handleResponseCode<T>(ResponseModel<T> data, {required Function(T) onSuccess, required Function(String) onError}){
