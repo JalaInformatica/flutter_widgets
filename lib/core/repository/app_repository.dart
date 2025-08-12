@@ -3,7 +3,7 @@ import 'package:flutter_widgets/core/models/response/response_model.dart';
 import 'package:flutter_widgets/core/models/response/response_code.dart';
 
 class AppRepository {
-  ResponseModel<List<T>> getResponseListData<T>(String response, {required List<T> Function(List<dynamic>) formatter}) {
+  ResponseModelPaginated<T> getResponsePaginatedData<T>(String response, {required List<T> Function(List<dynamic>) formatter}) {
     var result = jsonDecode(response)["rs"] ?? {};
 
     try {
@@ -12,23 +12,23 @@ class AppRepository {
 
         List<String> rawData = result['DATA'] ?? [];
         data = formatter(rawData);
-
-        return ResponseModel(
+        
+        return ResponseModelPaginated(
           data: data,
+          totalPage: num.parse(result['TOTAL_PAGE'] ?? 0),
+          totalRecord: num.parse(result['TOTAL_RECORD'] ?? 0),
           resultCode: result['RESULT_CODE'] ?? ResponseCode.success,
           resultDesc: result['RESULT_DESC'] ?? ResponseCode.successMsg,
           resultMessage: result['MESSAGE'] ?? '',
         );
       } else {
-        return ResponseModel(
+        return ResponseModelPaginated.error(
           data: [],
-          resultCode: result['RESULT_CODE'] ?? ResponseCode.error,
-          resultDesc: result['RESULT_DESC'] ?? ResponseCode.errorMsg,
           resultMessage: result['MESSAGE'] ?? '',
         );
       }
     } catch (e) {
-      return ResponseModel.exception(
+      return ResponseModelPaginated.exception(
         resultMessage: e.toString(),
       );
     }

@@ -52,11 +52,23 @@ class ViewModelHandler {
         }
       break;
       case ResponseCode.error:
-      onError(data.resultMessage);
+        onError(data.resultMessage);
       break;
       case ResponseCode.exception:
-      throw Exception(data.resultMessage);
+        throw Exception(data.resultMessage);
+    }
+  } 
+
+  static void handlePaginatedResponseCode<T>(ResponseModelPaginated<T> data, {required Function(List<T>) onSuccess, required Function(String) onError}){
+    switch(data.resultCode){
+      case ResponseCode.success:
+        onSuccess(data.data);
       break;
+      case ResponseCode.error:
+        onError(data.resultMessage);
+      break;
+      case ResponseCode.exception:
+        throw Exception(data.resultMessage);
     }
   } 
 
