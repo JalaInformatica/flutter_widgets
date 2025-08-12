@@ -42,12 +42,12 @@ class ViewModelHandler {
     return await SmartDialog.showToast(e, displayTime: Duration(seconds: 2));
   }
 
-  static void tryCatch({
+  static void tryCatchAsync({
     required Function() run,
     required Function(Object, StackTrace) onError
-  }){
+  }) async {
     try {
-      run();
+      await run();
     }
     catch(e, st) {
       onError(e, st);
