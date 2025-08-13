@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_widgets/theme/app_color.dart';
+
+import '../theme/app_color.dart';
 
 class AppTextDropdown<T> extends Container{
   final T value;
   final List<DropdownMenuItem<T>> items;
   final Function(T?) onChanged;
+  final Color? backgroundColor;
+  final Color? borderColor;
+
   AppTextDropdown({
     super.key, 
     required this.value,
     required this.items,
-    required this.onChanged
+    required this.onChanged,
+    this.backgroundColor,
+    this.borderColor
   }) : super(
     padding: EdgeInsets.zero,
     decoration: BoxDecoration(
-      border: Border.all(color: AppColor.grey500),
+      color: backgroundColor ?? AppColor.whiteColor,
+      border: Border.all(color: borderColor ?? AppColor.grey300),
       borderRadius: BorderRadius.circular(5)
     ),
     child: DropdownButton<T>(
@@ -21,7 +28,7 @@ class AppTextDropdown<T> extends Container{
     dropdownColor: AppColor.whiteColor,
     underline: SizedBox.shrink(),
     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-    elevation: 8,
+    elevation: 2,
     isDense: true,
     items: items,
     onChanged: onChanged)

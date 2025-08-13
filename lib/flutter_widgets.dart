@@ -5,7 +5,7 @@ export 'src/app_cached_image.dart';
 export 'src/app_checkbox.dart';
 export 'src/app_clickable_text.dart';
 export 'src/app_confirmation_dialog.dart';
-export 'src/app_dialog2.dart';
+export 'src/app_dialog.dart';
 export 'src/app_elevated_button.dart';
 export 'src/app_favorite_button.dart';
 export 'src/app_icon_button.dart';
