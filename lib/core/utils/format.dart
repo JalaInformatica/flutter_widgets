@@ -62,3 +62,13 @@ String getPercentage(int of, int from, {int decimalPoint=2}) {
     return "";
   }
 }
+
+String capitalizeEachWord(String text) {
+  if (text.trim().isEmpty) return text;
+  return text
+      .split(' ')
+      .map((word) => word.isNotEmpty
+          ? word[0].toUpperCase() + word.substring(1).toLowerCase()
+          : '')
+      .join(' ');
+}
