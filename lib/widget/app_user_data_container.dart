@@ -29,7 +29,7 @@ class AppUserDataContainer extends SizedBox{
             AppClickableText(
               foregroundColor: AppColor.primaryColor,
               onPressed: (){
-                AppNavigator.navigatePush(context, SignInPage());
+                AppNavigator.navigatePush(context, signInPage);
               }, 
               child:Text("Masuk", style: AppTextStyle.textNStyle(fontWeight: FontWeight.bold),)
             ),

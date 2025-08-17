@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_widgets/src/app_icon.dart';
 import 'package:flutter_widgets/theme/app_color.dart';
 import 'package:flutter_widgets/theme/app_text_style.dart';
+
+import 'app_icon.dart';
 
 class AppFavoriteButton extends AppIcon {
   bool isFavorite;

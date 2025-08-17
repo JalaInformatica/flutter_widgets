@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_widgets/src/app_clickable_text.dart';
 import 'package:flutter_widgets/theme/app_color.dart';
 import 'package:flutter_widgets/theme/app_text_style.dart';
+
+import 'app_clickable_text.dart';
 
 class AppConfirmationDialog extends AlertDialog {
   AppConfirmationDialog({

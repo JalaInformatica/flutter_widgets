@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_widgets/src/app_icon_button.dart';
-import 'package:flutter_widgets/src/app_text_field.dart';
 import 'package:flutter_widgets/theme/app_color.dart';
 import 'package:flutter_widgets/theme/app_text_style.dart';
 import 'package:shimmer/shimmer.dart';
+
+import 'app_icon_button.dart';
+import 'app_text_field.dart';
 
 class AppTable3 extends StatefulWidget {
   final List<AppTableTitle3> titles;
@@ -19,6 +20,7 @@ class AppTable3 extends StatefulWidget {
   final Color headerColor; 
   final Color oddRowColor; 
   final Color evenRowColor; 
+  final List<int> pageRowOption;
 
   AppTable3({
     super.key,
@@ -30,6 +32,7 @@ class AppTable3 extends StatefulWidget {
     this.onChangePageNo,
     this.pageNo = 1,
     this.pageRow = 10,
+    this.pageRowOption = const [10,25,50],
     this.footer,
     Color? headerColor,
     Color? oddRowColor,
@@ -46,11 +49,7 @@ class _AppTableState extends State<AppTable3> {
   final TextEditingController searchController = TextEditingController();
   Timer? _debounce;
 
-  final List<String> dropdownItems = [
-    '10/page',
-    '20/page',
-    '50/page',
-  ];
+  
 
   void _onChanged(String query) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
@@ -263,28 +262,28 @@ class _AppTableState extends State<AppTable3> {
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColor.grey500),
                     borderRadius: BorderRadius.circular(5)),
-                child: DropdownButton<String>(
+                child: DropdownButton<int>(
                   underline: SizedBox.shrink(),
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  value: "${widget.pageRow}/page",
-                  onChanged: (String? newValue) {
-                    if(widget.onChangePageRow!=null){
-                      widget.onChangePageRow??(int.parse((newValue ?? "10/page").split("/")[0]));
+                  value: widget.pageRow,
+                  onChanged: (int? newValue) {
+                    if(widget.onChangePageRow!=null && newValue!=null){
+                      widget.onChangePageRow!(newValue);
                     }
                   },
                   icon: Icon(Icons.arrow_drop_down),
                   isDense: true,
                   dropdownColor: AppColor.whiteColor,
-                  items: dropdownItems
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(
-                        value,
-                        style: AppTextStyle.textNStyle(),
-                      ),
-                    );
-                  }).toList(),
+                  items: widget.pageRowOption
+                      .map((e)=>
+                      DropdownMenuItem<int>(
+                        value: e,
+                        child: Text(
+                          "$e/page",
+                          style: AppTextStyle.textNStyle(),
+                        ),
+                      )
+                    ).toList(),
                   elevation: 8,
                 )),
           ],

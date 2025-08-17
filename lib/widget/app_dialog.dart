@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_widgets/flutter_widgets.dart';
-import 'package:flutter_widgets/theme/app_color.dart';
+import 'package:flutter_widgets/core/theme/theme.dart';
+import 'package:flutter_widgets/widget/app_normal_button.dart';
 
 class AppDialog extends Dialog {
   AppDialog({

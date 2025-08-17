@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_widgets/core/utils/app_navigator.dart';
-import 'package:flutter_widgets/flutter_widgets.dart';
+
+import '../../widget/app_normal_button.dart';
+import '../theme/theme.dart';
 
 class ErrorPage extends StatelessWidget {
   final String title;
