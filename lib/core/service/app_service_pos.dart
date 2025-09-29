@@ -5,13 +5,13 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:logger/logger.dart';
 
-import '../utils/identifier_manager.dart';
+import '../utils/identifier_manager_pos.dart';
 
 class AppServicesPos {
   Logger logger = Logger();
 
   Future<String> getBaseUrl() async {
-    var baseUrl = IdentifierManager.getServerEndPoint();
+    var baseUrl = IdentifierManagerPos.getServerEndPoint();
     return baseUrl;
   }
 
@@ -76,8 +76,8 @@ class AppServicesPos {
   }
 
   (String, String) fetchClientInfo() {
-    String datads = IdentifierManager.getDataDs();
-    String username = IdentifierManager.getClientKey();
+    String datads = IdentifierManagerPos.getDataDs();
+    String username = IdentifierManagerPos.getClientKey();
     return (datads, username);
   }
 
@@ -92,7 +92,7 @@ class AppServicesPos {
     String basicAuth =
         'Basic ${base64.encode(utf8.encode('$username:$password'))}';
 
-    String serverKey = IdentifierManager.getServerKey();
+    String serverKey = IdentifierManagerPos.getServerKey();
 
     Map<String, String> header = {
       'Authorization': basicAuth,
@@ -112,19 +112,19 @@ class AppServicesPos {
     String sessionId = "";
     String companyId = "";
 
-    ip = IdentifierManager.getIp();
+    ip = IdentifierManagerPos.getIp();
     if (ip.isEmpty) {
       try {
         var ipAddress = IpAddress();
         ip = await ipAddress.getIpAddress();
-        IdentifierManager.setIp(ip: ip);
+        IdentifierManagerPos.setIp(ip: ip);
       } on IpAddressException catch (exception) {
         print(exception.message);
       }
     }
-    userId = IdentifierManager.getUserId();
-    sessionId = IdentifierManager.getSessionLoginId();
-    companyId = IdentifierManager.getCompanyId();
+    userId = IdentifierManagerPos.getUserId();
+    sessionId = IdentifierManagerPos.getSessionLoginId();
+    companyId = IdentifierManagerPos.getCompanyId();
     return (ip, userId, sessionId, companyId);
   }
 
@@ -148,9 +148,9 @@ class AppServicesPos {
 
   Future<http.Response> getClientKeyRq() async {
     try {
-      String serverKey = IdentifierManager.getServerKey();
-      String baseUrl = IdentifierManager.getServerEndPoint();
-      String client = IdentifierManager.getClienId();
+      String serverKey = IdentifierManagerPos.getServerKey();
+      String baseUrl = IdentifierManagerPos.getServerEndPoint();
+      String client = IdentifierManagerPos.getClienId();
       var url = '$baseUrl/SYSMAN/client';
       var header = {'SERVER_KEY': serverKey};
       var body = jsonEncode({
