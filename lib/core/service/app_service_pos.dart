@@ -110,16 +110,18 @@ class AppServicesPos {
     String ip = "";
     String userId = "";
     String sessionId = "";
+    String companyId = "";
 
+    ip = IdentifierManager.getIp();
     if (ip.isEmpty) {
       try {
         var ipAddress = IpAddress();
-        IdentifierManager.setIp(ip: await ipAddress.getIpAddress());
+        ip = await ipAddress.getIpAddress();
+        IdentifierManager.setIp(ip: ip);
       } on IpAddressException catch (exception) {
         print(exception.message);
       }
     }
-    ip = IdentifierManager.getIp();
     userId = IdentifierManager.getUserId();
     sessionId = IdentifierManager.getSessionLoginId();
     companyId = IdentifierManager.getCompanyId();

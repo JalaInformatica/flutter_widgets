@@ -110,10 +110,12 @@ class AppServices {
     String userId = "";
     String sessionId = "";
 
+    ip = IdentifierManager.getIp();
     if (ip.isEmpty) {
       try {
         var ipAddress = IpAddress();
-        IdentifierManager.setIp(ip: await ipAddress.getIpAddress());
+        ip = await ipAddress.getIpAddress();
+        IdentifierManager.setIp(ip: ip);
       } on IpAddressException catch (exception) {
         print(exception.message);
       }
