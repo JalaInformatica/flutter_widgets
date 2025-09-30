@@ -39,9 +39,16 @@ class AppRepository {
 
     try {
       if (result['RESULT_CODE'].toString().contains(ResponseCode.success)) {
-        final rawData = result['DATA'] ?? [];
+        dynamic rawData;
 
-        T data = formatter(rawData.first);
+        if (result['DATA'] is List) {
+          var listData = result['DATA'] as List;
+          rawData = listData.isNotEmpty ? listData.first : null;
+        } else {
+          rawData = result['DATA'];
+        }
+
+        T data = formatter(rawData);
 
         return ResponseModel(
           data: data,
