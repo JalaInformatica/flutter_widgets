@@ -34,6 +34,34 @@ class AppRepository {
     }
   }
 
+  ResponseModel<List<T>> getResponseListData<T>(String response, {required List<T> Function(List<dynamic>) formatter}) {
+    var result = jsonDecode(response)["rs"] ?? {};
+
+    try {
+      if (result['RESULT_CODE'].toString().contains(ResponseCode.success)) {
+        List<T> data;
+
+        List<dynamic> rawData = result['DATA'] ?? [];
+        data = formatter(rawData);
+        
+        return ResponseModel(
+          data: data,
+          resultCode: result['RESULT_CODE'] ?? ResponseCode.success,
+          resultDesc: result['RESULT_DESC'] ?? ResponseCode.successMsg,
+          resultMessage: result['MESSAGE'] ?? '',
+        );
+      } else {
+        return ResponseModel.error(
+          data: [],
+          resultMessage: result['MESSAGE'] ?? '',
+        );
+      }
+    } catch (e) {
+      return ResponseModel.exception(
+        resultMessage: e.toString(),
+      );
+    }
+  }
 
   ResponseModel<T> getResponseSingleData<T>(String response, {required T Function(dynamic) formatter}) {
     var result = jsonDecode(response)["rs"] ?? {};
