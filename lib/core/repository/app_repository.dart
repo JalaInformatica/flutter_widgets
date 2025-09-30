@@ -33,7 +33,7 @@ class AppRepository {
       );
     }
   }
-  
+
 
   ResponseModel<T> getResponseSingleData<T>(String response, {required T Function(dynamic) formatter}) {
     var result = jsonDecode(response)["rs"] ?? {};
@@ -42,11 +42,11 @@ class AppRepository {
       if (result['RESULT_CODE'].toString().contains(ResponseCode.success)) {
         dynamic rawData;
 
-        if (result['DATA'] is List) {
-          var listData = result['DATA'] as List;
-          rawData = listData.isNotEmpty ? listData.first : null;
+        final dataField = result['DATA']; 
+        if (dataField is List) {         
+          rawData = dataField.isNotEmpty ? dataField.first : null;
         } else {
-          rawData = result['DATA'];
+          rawData = dataField;            
         }
 
         T data = formatter(rawData);
