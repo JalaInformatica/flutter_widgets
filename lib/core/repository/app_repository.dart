@@ -33,6 +33,7 @@ class AppRepository {
       );
     }
   }
+  
 
   ResponseModel<T> getResponseSingleData<T>(String response, {required T Function(dynamic) formatter}) {
     var result = jsonDecode(response)["rs"] ?? {};
