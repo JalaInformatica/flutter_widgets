@@ -9,6 +9,8 @@ class AppDataContainer extends SizedBox{
     required IconData noDataIcon,
     required String noDataText,
     required Widget child,
+    TextStyle? textStyle,
+    double? iconSize,
   }) : super(
         child: hasData? child : 
             Column(
@@ -16,8 +18,8 @@ class AppDataContainer extends SizedBox{
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: [
-                Icon(noDataIcon, color: AppColor.grey500, size: 50,),
-                Text(noDataText, style: AppTextStyle.textLgStyle(color: AppColor.grey500),),
+                Icon(noDataIcon, color: AppColor.grey500, size: iconSize ?? 50,),
+                Text(noDataText, style: textStyle ?? AppTextStyle.textLgStyle(color: AppColor.grey500),),
             ]
         )
     );
